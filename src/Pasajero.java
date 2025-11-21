@@ -33,7 +33,10 @@ public class Pasajero implements Comparable<Pasajero>{
     }
 
     @Override
-    public int compareTo(Pasajero o) {
-        return 0;
+    public int compareTo(Pasajero otraPersona) {
+
+        return Integer.compare(this.prioridad, otraPersona.prioridad);
+
+
     }
 }
