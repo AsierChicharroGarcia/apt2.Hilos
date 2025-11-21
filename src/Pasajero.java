@@ -1,4 +1,4 @@
-public class Pasajero {
+public class Pasajero implements Comparable<Pasajero>{
 
     private int id;
     private int prioridad;
@@ -30,5 +30,10 @@ public class Pasajero {
                 "id='" + id + '\'' +
                 ", prioridad='" + prioridad + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Pasajero o) {
+        return 0;
     }
 }
