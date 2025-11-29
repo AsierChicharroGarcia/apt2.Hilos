@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 public class Barco extends Thread {
 
@@ -7,14 +8,16 @@ public class Barco extends Thread {
     private String nombre;
     private int capacidad;
     private int tiempoRescate;
+    private Semaphore sem;
 
 
     private List<Pasajero> pasajeros;
 
-    public Barco(String nombre, int capacidad, int tiempoRescate, List<Pasajero> listaCompartida) {
+    public Barco(String nombre, int capacidad, int tiempoRescate, List<Pasajero> listaCompartida, Semaphore sem) {
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.tiempoRescate = tiempoRescate;
+        this.sem = sem;
 
         this.pasajeros = listaCompartida;
     }
@@ -25,19 +28,26 @@ public class Barco extends Thread {
         while (true) {
             List<Pasajero> rescatadosEnEsteViaje = new ArrayList<>();
 
-            synchronized (pasajeros) {
-                if (pasajeros.isEmpty()) {
-                    break;
-                }
-
-
-                for (int i = 0; i < capacidad; i++) {
-                    if (!pasajeros.isEmpty()) {
-
-                        Pasajero p = pasajeros.remove(0);
-                        rescatadosEnEsteViaje.add(p);
+            try {
+                sem.acquire();
+                try {
+                    if (pasajeros.isEmpty()) {
+                        break;
                     }
+
+
+                    for (int i = 0; i < capacidad; i++) {
+                        if (!pasajeros.isEmpty()) {
+
+                            Pasajero p = pasajeros.remove(0);
+                            rescatadosEnEsteViaje.add(p);
+                        }
+                    }
+                } finally {
+                    sem.release();
                 }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
 
             if (!rescatadosEnEsteViaje.isEmpty()) {

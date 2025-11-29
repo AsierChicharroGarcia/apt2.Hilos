@@ -2,12 +2,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 
 public class Main {
     public static void main(String[] args) {
 
         List<Pasajero> tripulacion = new ArrayList<>();
         Random rand = new Random();
+        Semaphore sem = new Semaphore(1);
 
 
         for (int i = 1; i <= 352; i++) {
@@ -23,11 +25,11 @@ public class Main {
         System.out.println("Prioridades organizadas. ¡Comienza el rescate!");
 
 
-        Barco acasta = new Barco("Acasta", 1, 500, tripulacion);
-        Barco banff = new Barco("Banff", 2, 1000, tripulacion);
-        Barco cadiz = new Barco("Cadiz", 3, 2000, tripulacion);
-        Barco deimos = new Barco("Deimos", 4, 4000, tripulacion);
-        Barco expedicion = new Barco("Expedición", 5, 8000, tripulacion);
+        Barco acasta = new Barco("Acasta", 1, 500, tripulacion, sem);
+        Barco banff = new Barco("Banff", 2, 1000, tripulacion, sem);
+        Barco cadiz = new Barco("Cadiz", 3, 2000, tripulacion, sem);
+        Barco deimos = new Barco("Deimos", 4, 4000, tripulacion, sem);
+        Barco expedicion = new Barco("Expedición", 5, 8000, tripulacion, sem);
 
 
         acasta.start();
