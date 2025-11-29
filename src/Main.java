@@ -9,35 +9,32 @@ public class Main {
 
         List<Pasajero> tripulacion = new ArrayList<>();
         Random rand = new Random();
+        // Semáforo para proteger el acceso a la lista de pasajeros (Mutex)
         Semaphore sem = new Semaphore(1);
 
-
         for (int i = 1; i <= 352; i++) {
-
             int prioridad = rand.nextInt(4) + 1;
             tripulacion.add(new Pasajero(i, prioridad));
         }
 
         System.out.println("Tripulación en peligro: " + tripulacion.size() + " personas.");
 
-
+        // Ordenamos por prioridad antes de empezar el rescate
         Collections.sort(tripulacion);
         System.out.println("Prioridades organizadas. ¡Comienza el rescate!");
 
-
+        // Creamos los barcos compartiendo la misma lista y el mismo semáforo
         Barco acasta = new Barco("Acasta", 1, 500, tripulacion, sem);
         Barco banff = new Barco("Banff", 2, 1000, tripulacion, sem);
         Barco cadiz = new Barco("Cadiz", 3, 2000, tripulacion, sem);
         Barco deimos = new Barco("Deimos", 4, 4000, tripulacion, sem);
         Barco expedicion = new Barco("Expedición", 5, 8000, tripulacion, sem);
 
-
         acasta.start();
         banff.start();
         cadiz.start();
         deimos.start();
         expedicion.start();
-
 
         try {
             acasta.join();
